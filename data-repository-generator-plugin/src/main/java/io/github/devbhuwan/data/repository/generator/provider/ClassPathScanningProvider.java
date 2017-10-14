@@ -63,12 +63,20 @@ public class ClassPathScanningProvider {
             topLevelClasses.forEach(classInfo -> {
                 Class<?> aClass = classInfo.load();
                 BusinessDomain businessDomain = aClass.getAnnotation(BusinessDomain.class);
+                try {
+                    if (businessDomain == null) {
+                        aClass = Class.forName(aClass.getName());
+                        businessDomain = aClass.getAnnotation(BusinessDomain.class);
+                    }
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalArgumentException(e);
+                }
                 if (businessDomain != null && !CACHE_FOR_ALREADY_GENERATED_CLASSES.containsKey(aClass.getName())) {
                     DefinitionDto definitionDto = new DefinitionDto();
                     definitionDto.setClassName(aClass.getSimpleName());
                     definitionDto.setClassPackage(aClass.getPackage().getName());
                     Class<?> idClass = GenericTypeResolver.resolveTypeArgument(aClass, CoreDomain.class);
-                    definitionDto.setIdClassName(idClass.getName());
+                    definitionDto.setIdClassName(idClass.getSimpleName());
                     definitionDto.setIdClassPackage(idClass.getPackage().getName());
                     definitionDtos.add(definitionDto);
                     CACHE_FOR_ALREADY_GENERATED_CLASSES.put(aClass.getName(), true);

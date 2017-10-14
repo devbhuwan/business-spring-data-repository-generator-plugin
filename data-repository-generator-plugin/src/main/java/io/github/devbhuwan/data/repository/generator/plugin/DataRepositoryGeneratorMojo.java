@@ -15,10 +15,11 @@ import org.apache.maven.shared.invoker.Invoker;
 
 import java.util.Collections;
 
-@Mojo(name = DataRepositoryGeneratorMojo.MOJO_GOAL, defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, requiresDependencyCollection = ResolutionScope.TEST)
+@Mojo(name = DataRepositoryGeneratorMojo.MOJO_GOAL, requiresDependencyResolution = ResolutionScope.TEST, requiresDependencyCollection = ResolutionScope.TEST, threadSafe = true)
 public class DataRepositoryGeneratorMojo extends CommonsMojo {
 
     public static final String MOJO_GOAL = "generate-repositories";
+    private static Boolean IS_COMPILE_FIRST = false;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -28,8 +29,9 @@ public class DataRepositoryGeneratorMojo extends CommonsMojo {
         this.validateField(Constants.SOURCE_REPOSITORIES_GENERATED_DIRECTOR);
         this.validateField(Constants.TEST_REPOSITORIES_GENERATED_DIRECTOR);
         try {
-            compileBeforeGenerateIgnoreFailOnError();
-
+            if (!IS_COMPILE_FIRST)
+                compileBeforeGenerateIgnoreFailOnError();
+            IS_COMPILE_FIRST = true;
             ClassPathScanningProvider withSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.RUNTIME);
             ClassPathScanningProvider withTestSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.TEST);
 

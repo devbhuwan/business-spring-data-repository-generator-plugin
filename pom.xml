@@ -11,6 +11,7 @@
         <module>data-definition-model</module>
         <module>data-repository-generator-plugin-test</module>
         <module>data-repository-generator-plugin</module>
+        <module>data-repository-starter</module>
         <module>examples</module>
     </modules>
 

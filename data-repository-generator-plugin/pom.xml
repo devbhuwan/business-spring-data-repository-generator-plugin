@@ -11,7 +11,8 @@
 
     <artifactId>data-repository-generator-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.0</version>
+    <!--<version>1.0</version>-->
+
     <dependencies>
         <dependency>
             <groupId>commons-logging</groupId>
