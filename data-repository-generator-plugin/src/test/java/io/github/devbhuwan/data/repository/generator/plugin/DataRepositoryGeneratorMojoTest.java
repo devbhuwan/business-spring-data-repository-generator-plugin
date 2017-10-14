@@ -11,6 +11,7 @@ import static io.takari.maven.testing.TestResources.assertFilesPresent;
 
 public class DataRepositoryGeneratorMojoTest {
 
+    public static final String TARGET_GENERATED_SOURCES = "target/generated-sources/annotations/io/github/devbhuwan";
     @Rule
     public final TestMavenRuntime maven = new TestMavenRuntime();
     @Rule
@@ -20,8 +21,8 @@ public class DataRepositoryGeneratorMojoTest {
     public void givenBpmnFilesInSourceAndTestResourceDirectory_whenGenerateBpmnConstantMojo_thenGenerateConstantFiles() throws Exception {
         File basedir = resources.getBasedir("basic");
         maven.executeMojo(basedir, DataRepositoryGeneratorMojo.MOJO_GOAL);
-        assertFilesPresent(basedir, "target/generated-sources/annotations/bpmn/metadata/BpmnMetadataSrcConstants.java");
-        assertFilesPresent(basedir, "target/generated-test-sources/test-annotations/bpmn/metadata/BpmnMetadataTestConstants.java");
+        assertFilesPresent(basedir, TARGET_GENERATED_SOURCES + "/repositories/BusinessDataDataRepository.java");
+        assertFilesPresent(basedir, TARGET_GENERATED_SOURCES + "/runtime/path/model/repositories/RuntimePathModelDataRepository.java");
     }
 
 }

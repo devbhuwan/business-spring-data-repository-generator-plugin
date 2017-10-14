@@ -13,7 +13,7 @@
         <dependency>
             <groupId>io.github.devbhuwan</groupId>
             <artifactId>data-definition-model</artifactId>
-            <version>1.0</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -35,7 +35,7 @@
                     <dependency>
                         <groupId>io.github.devbhuwan</groupId>
                         <artifactId>data-repository-generator-plugin-test</artifactId>
-                        <version>1.0</version>
+                        <version>1.0-SNAPSHOT</version>
                     </dependency>
                 </dependencies>
             </plugin>

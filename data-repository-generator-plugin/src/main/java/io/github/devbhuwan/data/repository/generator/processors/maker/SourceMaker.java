@@ -47,7 +47,7 @@ public abstract class SourceMaker {
             String fileName = buildJavaFileName(definitionDto.getClassName(), postfix());
             template.process(definitionDto, new FileWriter(buildGeneratedSourcePath(pathWithPackage, fileName)));
             PluginLogger.addRowGeneratedTable(postfix(), fileName, "Ok");
-            PluginLogger.plusGenerated(1);
+            //PluginLogger.plusGenerated(1);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
