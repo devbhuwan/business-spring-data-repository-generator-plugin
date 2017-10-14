@@ -11,5 +11,6 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 public class DataRepositoryProperties {
 
+    private String dataProviderType;
 
 }
