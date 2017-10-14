@@ -1,18 +1,20 @@
 package io.github.devbhuwan.data.repository.generator.processors.maker;
 
-public class Code extends SourceMaker {
+public class DataRepositorySourceMaker extends SourceMaker {
+
     @Override
     String postfix() {
-        return null;
+        return "DataRepository";
     }
 
     @Override
     String templatePath() {
-        return null;
+        return "templates/repository/DataRepository.java";
     }
 
     @Override
     String subpackagePath() {
-        return null;
+        return "repositories";
     }
+
 }
