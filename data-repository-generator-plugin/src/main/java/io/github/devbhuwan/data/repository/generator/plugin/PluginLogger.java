@@ -4,6 +4,7 @@ import de.vandermeer.asciitable.AT_Row;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestWordMin;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+import io.github.devbhuwan.data.repository.generator.processors.PluginGeneratorProcessor;
 import io.github.devbhuwan.data.repository.generator.util.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class PluginLogger {
 
-    private static final Log commonsLogger = LogFactory.getLog(EnableBpmnMetadataConstantGenerator.class);
+    private static final Log commonsLogger = LogFactory.getLog(PluginGeneratorProcessor.class);
     private static org.apache.maven.plugin.logging.Log mavenLogger;
     private static int generated = 0;
     private static List<String> errors = new ArrayList<>();

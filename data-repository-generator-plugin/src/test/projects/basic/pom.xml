@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.devbhuwan</groupId>
-    <artifactId>bpmn-metadata-constant-generator-test</artifactId>
+    <artifactId>data-repository-generator-plugin-basic-test</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -31,6 +31,13 @@
                 <groupId>io.github.devbhuwan</groupId>
                 <artifactId>data-repository-generator-plugin</artifactId>
                 <version>1.0-SNAPSHOT</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.github.devbhuwan</groupId>
+                        <artifactId>data-repository-generator-plugin-test</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

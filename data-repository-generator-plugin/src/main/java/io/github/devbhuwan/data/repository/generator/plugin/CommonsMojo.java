@@ -1,12 +1,15 @@
 package io.github.devbhuwan.data.repository.generator.plugin;
 
 import io.github.devbhuwan.data.repository.generator.util.Constants;
+import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.dependencies.resolve.DependencyResolver;
+import org.eclipse.aether.impl.ArtifactResolver;
 
 import java.io.File;
 import java.util.HashSet;
@@ -38,6 +41,28 @@ public abstract class CommonsMojo extends AbstractMojo {
     @Component
     private BuildPluginManager pluginManager;
 
+    /**
+     *
+     */
+    @Component
+    private ArtifactFactory artifactFactory;
+
+    /**
+     *
+     */
+    @Component
+    private ArtifactResolver artifactResolver;
+    @Component
+    private DependencyResolver dependencyResolver;
+
+
+    public ArtifactResolver getArtifactResolver() {
+        return artifactResolver;
+    }
+
+    public DependencyResolver getDependencyResolver() {
+        return dependencyResolver;
+    }
 
     public void validateField(String parameter) throws PluginMojoException {
         boolean errorFound = Boolean.FALSE;

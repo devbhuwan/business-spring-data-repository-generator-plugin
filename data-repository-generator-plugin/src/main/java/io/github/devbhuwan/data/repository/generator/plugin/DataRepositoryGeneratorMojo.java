@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -14,7 +15,7 @@ import org.apache.maven.shared.invoker.Invoker;
 
 import java.util.Collections;
 
-@Mojo(name = DataRepositoryGeneratorMojo.MOJO_GOAL, defaultPhase = LifecyclePhase.PROCESS_SOURCES)
+@Mojo(name = DataRepositoryGeneratorMojo.MOJO_GOAL, defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, requiresDependencyCollection = ResolutionScope.TEST)
 public class DataRepositoryGeneratorMojo extends CommonsMojo {
 
     public static final String MOJO_GOAL = "generate-repositories";
