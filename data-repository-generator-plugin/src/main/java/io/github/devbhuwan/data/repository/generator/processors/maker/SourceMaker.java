@@ -4,6 +4,7 @@ import freemarker.template.*;
 import io.github.devbhuwan.data.repository.generator.dto.DefinitionDto;
 import io.github.devbhuwan.data.repository.generator.plugin.PluginLogger;
 import io.github.devbhuwan.data.repository.generator.processors.PluginGeneratorProcessor;
+import io.github.devbhuwan.data.repository.generator.util.Constants;
 import io.github.devbhuwan.data.repository.generator.util.GeneratorUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -54,6 +55,7 @@ public abstract class SourceMaker {
 
     public void generate(String generatedOutputDirectory, DefinitionDto definitionDto) {
         definitionDto.validate();
+        definitionDto.setGeneratorSignature(Constants.currentGeneratorSignature());
         make(generatedOutputDirectory, definitionDto);
     }
 

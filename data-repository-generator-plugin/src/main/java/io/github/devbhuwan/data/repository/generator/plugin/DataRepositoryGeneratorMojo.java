@@ -30,8 +30,8 @@ public class DataRepositoryGeneratorMojo extends CommonsMojo {
         try {
             compileBeforeGenerateIgnoreFailOnError();
 
-            ClassPathScanningProvider withSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this);
-            ClassPathScanningProvider withTestSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this);
+            ClassPathScanningProvider withSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.RUNTIME);
+            ClassPathScanningProvider withTestSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.TEST);
 
             PluginTemplateSupport pluginTemplateSupport = new PluginTemplateSupport();
 

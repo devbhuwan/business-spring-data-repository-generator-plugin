@@ -3,12 +3,16 @@ package io.github.devbhuwan.data.repository.generator.provider;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
+import io.github.devbhuwan.data.definition.BusinessDomain;
+import io.github.devbhuwan.data.definition.CoreDomain;
 import io.github.devbhuwan.data.repository.generator.dto.DefinitionDto;
 import io.github.devbhuwan.data.repository.generator.plugin.CommonsMojo;
+import io.github.devbhuwan.data.repository.generator.plugin.GeneratorScope;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.resolve.ArtifactResult;
+import org.springframework.core.GenericTypeResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +25,7 @@ public class ClassPathScanningProvider {
 
     private List<DefinitionDto> definitionDtos = new ArrayList<>();
 
-    public ClassPathScanningProvider(String compileSourcesOutputDirectory, CommonsMojo generatorMojo) {
+    public ClassPathScanningProvider(String compileSourcesOutputDirectory, CommonsMojo generatorMojo, GeneratorScope generatorScope) {
         Optional.of(compileSourcesOutputDirectory).ifPresent(outputDirectory -> {
             try {
                 if (generatorMojo.isIncludeCurrentProject()) {
@@ -35,7 +39,12 @@ public class ClassPathScanningProvider {
                     buildingRequest.setProject(generatorMojo.getMavenProject());
                     buildingRequest.setLocalRepository(generatorMojo.getMavenSession().getLocalRepository());
                     Iterable<ArtifactResult> artifactResults = generatorMojo.getDependencyResolver().resolveDependencies(buildingRequest, plugin.getDependencies(), null, null);
-                    artifactResults.forEach(artifactResult -> runtimeDependencies.add(artifactResult.getArtifact().getFile()));
+                    artifactResults.forEach(artifactResult -> {
+                        if (generatorScope.getScope().equals(artifactResult.getArtifact().getScope()))
+                            runtimeDependencies.add(artifactResult.getArtifact().getFile());
+                        else if (generatorScope.getScope().equals("compile") && artifactResult.getArtifact().getScope() == null)
+                            runtimeDependencies.add(artifactResult.getArtifact().getFile());
+                    });
                     collectDefinition(generatorMojo, runtimeDependencies);
                 }
             } catch (Exception e) {
@@ -51,8 +60,16 @@ public class ClassPathScanningProvider {
             ImmutableSet<ClassPath.ClassInfo> topLevelClasses = ClassPath.from(buildClassLoader(dependencies)).getTopLevelClassesRecursive(rootPackage);
             topLevelClasses.forEach(classInfo -> {
                 Class<?> aClass = classInfo.load();
-
-                definitionDtos.add(new DefinitionDto());
+                BusinessDomain businessDomain = aClass.getAnnotation(BusinessDomain.class);
+                if (businessDomain != null) {
+                    DefinitionDto definitionDto = new DefinitionDto();
+                    definitionDto.setClassName(aClass.getSimpleName());
+                    definitionDto.setClassPackage(aClass.getPackage().getName());
+                    Class<?> idClass = GenericTypeResolver.resolveTypeArgument(aClass, CoreDomain.class);
+                    definitionDto.setIdClassName(idClass.getName());
+                    definitionDto.setIdClassPackage(idClass.getPackage().getName());
+                    definitionDtos.add(definitionDto);
+                }
             });
         }
     }
