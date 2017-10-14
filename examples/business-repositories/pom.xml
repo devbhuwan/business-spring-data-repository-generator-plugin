@@ -30,11 +30,24 @@
                 <groupId>io.github.devbhuwan</groupId>
                 <artifactId>data-repository-generator-plugin</artifactId>
                 <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-repositories</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <dependencies>
                     <dependency>
                         <groupId>io.github.devbhuwan</groupId>
                         <artifactId>business-model</artifactId>
                         <version>1.0-SNAPSHOT</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.springframework.data</groupId>
+                        <artifactId>spring-data-commons</artifactId>
+                        <version>1.13.7.RELEASE</version>
                     </dependency>
                 </dependencies>
             </plugin>

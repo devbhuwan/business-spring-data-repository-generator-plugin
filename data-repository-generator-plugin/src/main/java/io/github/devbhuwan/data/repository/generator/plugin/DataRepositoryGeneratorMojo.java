@@ -15,11 +15,11 @@ import org.apache.maven.shared.invoker.Invoker;
 
 import java.util.Collections;
 
-@Mojo(name = DataRepositoryGeneratorMojo.MOJO_GOAL, requiresDependencyResolution = ResolutionScope.TEST, requiresDependencyCollection = ResolutionScope.TEST, threadSafe = true)
+@Mojo(name = DataRepositoryGeneratorMojo.MOJO_GOAL, defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, requiresDependencyCollection = ResolutionScope.TEST, threadSafe = true)
 public class DataRepositoryGeneratorMojo extends CommonsMojo {
 
     public static final String MOJO_GOAL = "generate-repositories";
-    private static Boolean IS_COMPILE_FIRST = false;
+    private static final String PLUGIN_INTERNAL_COMPILE = "dataRepositoryGeneratorPluginInternalCompile";
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -29,19 +29,18 @@ public class DataRepositoryGeneratorMojo extends CommonsMojo {
         this.validateField(Constants.SOURCE_REPOSITORIES_GENERATED_DIRECTOR);
         this.validateField(Constants.TEST_REPOSITORIES_GENERATED_DIRECTOR);
         try {
-            if (!IS_COMPILE_FIRST)
+            if (!"true".equals(System.getProperty(PLUGIN_INTERNAL_COMPILE))) {
                 compileBeforeGenerateIgnoreFailOnError();
-            IS_COMPILE_FIRST = true;
-            ClassPathScanningProvider withSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.RUNTIME);
-            ClassPathScanningProvider withTestSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.TEST);
+                ClassPathScanningProvider withSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.RUNTIME);
+                ClassPathScanningProvider withTestSources = new ClassPathScanningProvider(getMavenProject().getBuild().getOutputDirectory(), this, GeneratorScope.TEST);
 
-            PluginTemplateSupport pluginTemplateSupport = new PluginTemplateSupport();
+                PluginTemplateSupport pluginTemplateSupport = new PluginTemplateSupport();
 
-            pluginTemplateSupport.initializeCreation(sourceRepositoriesGeneratedDirector.getAbsolutePath(), withSources.getCandidates());
-            pluginTemplateSupport.initializeCreation(testRepositoriesGeneratedDirector.getAbsolutePath(), withTestSources.getCandidates());
+                pluginTemplateSupport.initializeCreation(sourceRepositoriesGeneratedDirector.getAbsolutePath(), withSources.getCandidates());
+                pluginTemplateSupport.initializeCreation(testRepositoriesGeneratedDirector.getAbsolutePath(), withTestSources.getCandidates());
 
-            PluginLogger.printGeneratedTables(true);
-
+                PluginLogger.printGeneratedTables(true);
+            }
         } catch (Exception e) {
             PluginLogger.addError(e.getMessage());
             throw new PluginMojoException(e.getMessage(), e);
@@ -53,7 +52,7 @@ public class DataRepositoryGeneratorMojo extends CommonsMojo {
             System.setProperty("maven.home", "/home/devbhuwan/.sdkman/candidates/maven/3.5.0");
             InvocationRequest request = new DefaultInvocationRequest();
             request.setPomFile(getMavenProject().getFile());
-            request.setGoals(Collections.singletonList("compile -DfailOnError=false"));
+            request.setGoals(Collections.singletonList("compile -DfailOnError=false -D" + PLUGIN_INTERNAL_COMPILE + "=true"));
             Invoker invoker = new DefaultInvoker();
             invoker.execute(request);
         } catch (Exception e) {
