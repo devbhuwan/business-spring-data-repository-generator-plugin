@@ -20,9 +20,11 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassPathScanningProvider {
 
+    private static final Map<String, Boolean> CACHE_FOR_ALREADY_GENERATED_CLASSES = new ConcurrentHashMap<>();
     private List<DefinitionDto> definitionDtos = new ArrayList<>();
 
     public ClassPathScanningProvider(String compileSourcesOutputDirectory, CommonsMojo generatorMojo, GeneratorScope generatorScope) {
@@ -61,7 +63,7 @@ public class ClassPathScanningProvider {
             topLevelClasses.forEach(classInfo -> {
                 Class<?> aClass = classInfo.load();
                 BusinessDomain businessDomain = aClass.getAnnotation(BusinessDomain.class);
-                if (businessDomain != null) {
+                if (businessDomain != null && !CACHE_FOR_ALREADY_GENERATED_CLASSES.containsKey(aClass.getName())) {
                     DefinitionDto definitionDto = new DefinitionDto();
                     definitionDto.setClassName(aClass.getSimpleName());
                     definitionDto.setClassPackage(aClass.getPackage().getName());
@@ -69,6 +71,7 @@ public class ClassPathScanningProvider {
                     definitionDto.setIdClassName(idClass.getName());
                     definitionDto.setIdClassPackage(idClass.getPackage().getName());
                     definitionDtos.add(definitionDto);
+                    CACHE_FOR_ALREADY_GENERATED_CLASSES.put(aClass.getName(), true);
                 }
             });
         }
