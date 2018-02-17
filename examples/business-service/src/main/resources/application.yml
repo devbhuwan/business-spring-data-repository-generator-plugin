@@ -1,0 +1,21 @@
+---
+spring:
+  profiles: mongo
+  data:
+    mongodb:
+      repositories:
+        enabled: true
+    jpa:
+      repositories:
+        enabled: false
+
+---
+spring:
+  profiles: jpa
+  data:
+    jpa:
+      repositories:
+        enabled: false
+    mongodb:
+      repositories:
+        enabled: false
